@@ -56,9 +56,11 @@ def render_body(genre_id: str, family: str, sections: list[str], language: str) 
     blocks: list[str] = []
     body_prompt = "根据真实信息撰写本节" if language == "zh" else "Write this section using verified information"
     career_prompt = "填写与目标相关且可核验的信息" if language == "zh" else "Add relevant, verifiable information"
-    for section in sections:
+    for index, section in enumerate(sections):
         heading = latex_escape(section)
-        if genre_id in {"apa-student-paper-en", "mla-research-paper-en"}:
+        if genre_id == "apa-student-paper-en" and index == 0:
+            blocks.append(rf"\missingfield{{{body_prompt}}}")
+        elif genre_id in {"apa-student-paper-en", "mla-research-paper-en"}:
             blocks.append(rf"\section*{{{heading}}}" + "\n" + rf"\missingfield{{{body_prompt}}}")
         elif family in {"academic", "report", "organization"}:
             blocks.append(rf"\section{{{heading}}}" + "\n" + rf"\missingfield{{{body_prompt}}}")

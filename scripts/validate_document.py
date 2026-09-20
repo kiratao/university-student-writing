@@ -60,6 +60,10 @@ def validate(project: Path, strict: bool) -> dict:
         errors.append("main.tex 含未替换的模板标记 @@...@@")
 
     for section in manifest.get("required_sections", []):
+        if manifest.get("genre_id") == "apa-student-paper-en" and section == "Introduction":
+            # APA student papers ordinarily begin the introduction under the repeated
+            # paper title, without an explicit "Introduction" heading.
+            continue
         if section not in text:
             errors.append(f"缺少注册表要求的结构：{section}")
 
