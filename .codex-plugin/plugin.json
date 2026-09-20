@@ -1,0 +1,34 @@
+{
+  "name": "university-student-writing",
+  "version": "1.0.0",
+  "description": "Create, adapt, and validate standards-aware LaTeX documents for university students.",
+  "author": {
+    "name": "tyz"
+  },
+  "license": "MIT",
+  "keywords": [
+    "university",
+    "student-writing",
+    "latex",
+    "education"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "大学生多文体写作",
+    "shortDescription": "生成并校验大学生常用中英文 LaTeX 文档",
+    "longDescription": "覆盖学习、社会实践、学生工作、校园新闻、申请与求职场景，根据真实规范生成可编辑 LaTeX 项目并执行结构与编译校验。",
+    "developerName": "tyz",
+    "category": "Education",
+    "capabilities": [
+      "Writing",
+      "LaTeX generation",
+      "Format validation"
+    ],
+    "defaultPrompt": [
+      "帮我按学校要求生成一份社会实践报告 LaTeX 项目。",
+      "把这份活动策划书整理成规范、可编译的 LaTeX 文档。",
+      "检查这篇课程论文的结构、引用和 LaTeX 排版。"
+    ],
+    "brandColor": "#5B4B8A"
+  }
+}
