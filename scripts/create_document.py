@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
 import shutil
 import sys
@@ -43,17 +44,23 @@ def field(value: str | None, label: str) -> str:
 def default_date(language: str) -> str:
     today = dt.date.today()
     if language == "en":
-        return today.strftime("%B %d, %Y").replace(" 0", " ")
+        months = (
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December",
+        )
+        return f"{months[today.month - 1]} {today.day}, {today.year}"
     return f"{today.year}年{today.month}月{today.day}日"
 
 
-def render_body(family: str, sections: list[str], language: str) -> str:
+def render_body(genre_id: str, family: str, sections: list[str], language: str) -> str:
     blocks: list[str] = []
     body_prompt = "根据真实信息撰写本节" if language == "zh" else "Write this section using verified information"
     career_prompt = "填写与目标相关且可核验的信息" if language == "zh" else "Add relevant, verifiable information"
     for section in sections:
         heading = latex_escape(section)
-        if family in {"academic", "report", "organization"}:
+        if genre_id in {"apa-student-paper-en", "mla-research-paper-en"}:
+            blocks.append(rf"\section*{{{heading}}}" + "\n" + rf"\missingfield{{{body_prompt}}}")
+        elif family in {"academic", "report", "organization"}:
             blocks.append(rf"\section{{{heading}}}" + "\n" + rf"\missingfield{{{body_prompt}}}")
         elif family == "career":
             blocks.append(rf"\section*{{{heading}}}" + "\n" + rf"\missingfield{{{career_prompt}}}")
@@ -66,12 +73,15 @@ def render_body(family: str, sections: list[str], language: str) -> str:
     return "\n\n".join(blocks)
 
 
-def choose_template(genre_id: str, family: str) -> Path:
+def choose_template(genre_id: str, family: str, language: str) -> Path:
     special = {
         "apa-student-paper-en": ASSET_ROOT / "academic" / "apa.tex",
         "mla-research-paper-en": ASSET_ROOT / "academic" / "mla.tex",
     }
-    return special.get(genre_id, ASSET_ROOT / family / "main.tex")
+    if genre_id in special:
+        return special[genre_id]
+    localized = ASSET_ROOT / family / f"main-{language}.tex"
+    return localized if localized.is_file() else ASSET_ROOT / family / "main.tex"
 
 
 def prepare_output(path: Path, force: bool) -> None:
@@ -84,16 +94,35 @@ def prepare_output(path: Path, force: bool) -> None:
         path.mkdir(parents=True)
 
 
-def copy_school_template(source: Path, output: Path) -> str:
+def validate_school_template_path(source: Path, output: Path) -> None:
     if not source.exists():
         raise ValueError(f"学校模板不存在：{source}")
+    if source == output or source.is_relative_to(output):
+        raise ValueError("学校模板不能位于输出目录中")
+    if source.is_dir() and output.is_relative_to(source):
+        raise ValueError("输出目录不能位于学校模板目录中，以免递归复制")
+
+
+def template_fingerprint(source: Path) -> str:
+    digest = hashlib.sha256()
+    files = [source] if source.is_file() else sorted(path for path in source.rglob("*") if path.is_file())
+    for path in files:
+        relative = path.name if source.is_file() else path.relative_to(source).as_posix()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def copy_school_template(source: Path, output: Path) -> dict[str, str]:
     destination = output / "school-template"
     if source.is_dir():
         shutil.copytree(source, destination)
     else:
         destination.mkdir()
         shutil.copy2(source, destination / source.name)
-    return str(source.resolve())
+    return {"label": source.name, "sha256": template_fingerprint(source)}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -101,9 +130,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--list", action="store_true", help="列出可用文体")
     parser.add_argument("--genre", help="genre-registry.json 中的文体 ID")
     parser.add_argument("--output", type=Path, help="新建项目目录")
-    parser.add_argument("--language", choices=("zh", "en"), help="覆盖默认语言")
     parser.add_argument("--title")
     parser.add_argument("--author")
+    parser.add_argument("--last-name", help="MLA 页眉使用的作者姓氏")
     parser.add_argument("--student-id")
     parser.add_argument("--university")
     parser.add_argument("--college")
@@ -130,21 +159,25 @@ def main() -> int:
         return 2
 
     spec = registry[args.genre]
-    language = args.language or spec["language"]
+    language = spec["language"]
     output = args.output.resolve()
+    school_template = args.school_template.resolve() if args.school_template else None
 
     try:
+        if school_template:
+            validate_school_template_path(school_template, output)
         prepare_output(output, args.force)
-        template_path = choose_template(args.genre, spec["family"])
+        template_path = choose_template(args.genre, spec["family"], language)
         source = template_path.read_text(encoding="utf-8")
         replacements = {
             "@@TITLE@@": field(args.title or spec["display_name"], "标题"),
             "@@AUTHOR@@": field(args.author, "姓名" if language == "zh" else "Name"),
+            "@@LAST_NAME@@": field(args.last_name, "Last name"),
             "@@STUDENT_ID@@": field(args.student_id, "学号" if language == "zh" else "Student ID"),
             "@@UNIVERSITY@@": field(args.university, "学校" if language == "zh" else "University"),
             "@@COLLEGE@@": field(args.college, "学院或系" if language == "zh" else "Department"),
             "@@DATE@@": latex_escape(args.date or default_date(language)),
-            "@@BODY@@": render_body(spec["family"], spec["sections"], language),
+            "@@BODY@@": render_body(args.genre, spec["family"], spec["sections"], language),
         }
         for token, value in replacements.items():
             source = source.replace(token, value)
@@ -162,9 +195,9 @@ def main() -> int:
             newline="\n",
         )
 
-        school_source = None
-        if args.school_template:
-            school_source = copy_school_template(args.school_template.resolve(), output)
+        school_metadata = None
+        if school_template:
+            school_metadata = copy_school_template(school_template, output)
 
         manifest = {
             "schema_version": 1,
@@ -176,8 +209,11 @@ def main() -> int:
             "engine": "xelatex",
             "main": "main.tex",
             "required_sections": spec["sections"],
-            "authority": "school-template" if school_source else "built-in-baseline",
-            "school_template_source": school_source,
+            "authority": "built-in-baseline",
+            "school_template_source_label": school_metadata["label"] if school_metadata else None,
+            "school_template_sha256": school_metadata["sha256"] if school_metadata else None,
+            "school_template_status": "copied-for-manual-adaptation" if school_metadata else None,
+            "requires_manual_template_adaptation": bool(school_metadata),
             "requires_institution_check": True,
             "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         }

@@ -1,9 +1,15 @@
 \documentclass[12pt,letterpaper]{article}
 \usepackage{studentwrite}
+\renewcommand{\missingfield}[1]{\textcolor{red!70!black}{[[To fill: #1]]}}
 \geometry{letterpaper,margin=1in}
 \setstretch{2}
 \setlength{\parindent}{0.5in}
-\pagestyle{plain}
+\titleformat{\section}{\bfseries}{}{0pt}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{@@LAST_NAME@@\ \thepage}
+\setlength{\headheight}{15pt}
+\renewcommand{\headrulewidth}{0pt}
 
 \begin{document}
 \noindent @@AUTHOR@@\\

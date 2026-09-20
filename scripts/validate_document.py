@@ -12,6 +12,9 @@ from pathlib import Path
 
 PLACEHOLDER_RE = re.compile(r"\\missingfield\{([^}]*)\}")
 IMAGE_RE = re.compile(r"\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}")
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+REGISTRY_PATH = SKILL_ROOT / "references" / "genre-registry.json"
+SOURCE_SUFFIXES = {".tex", ".sty", ".cls", ".bib", ".bbx", ".cbx", ".png", ".jpg", ".jpeg", ".pdf"}
 
 
 def load_project(project: Path) -> tuple[dict, Path, str]:
@@ -37,6 +40,18 @@ def validate(project: Path, strict: bool) -> dict:
         if key not in manifest:
             errors.append(f"document.json 缺少字段：{key}")
 
+    registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    genre_id = manifest.get("genre_id")
+    registered = registry.get(genre_id)
+    if not registered:
+        errors.append(f"文体未在注册表登记：{genre_id}")
+    else:
+        for key in ("family", "language"):
+            if manifest.get(key) != registered.get(key):
+                errors.append(f"document.json 的 {key} 与注册表不一致")
+        if manifest.get("required_sections") != registered.get("sections"):
+            errors.append("document.json 的 required_sections 与注册表不一致")
+
     if "\\begin{document}" not in text or "\\end{document}" not in text:
         errors.append("main.tex 缺少完整 document 环境")
     if text.count("\\begin{") != text.count("\\end{"):
@@ -58,6 +73,9 @@ def validate(project: Path, strict: bool) -> dict:
             continue
         image_path = (main.parent / raw_path).resolve()
         candidates = [image_path] if image_path.suffix else [image_path.with_suffix(ext) for ext in (".pdf", ".png", ".jpg", ".jpeg")]
+        if any(not candidate.is_relative_to(project) for candidate in candidates):
+            errors.append(f"图片路径越出项目目录：{raw_path}")
+            continue
         if not any(candidate.is_file() for candidate in candidates):
             errors.append(f"图片不存在：{raw_path}")
 
@@ -75,13 +93,25 @@ def validate(project: Path, strict: bool) -> dict:
         warnings.append("未发现编译日志；尚不能确认实际编译状态")
 
     if pdf.is_file():
-        if pdf.stat().st_mtime < main.stat().st_mtime:
-            errors.append("PDF 早于 main.tex，需要重新编译")
+        dependencies = [
+            path for path in project.rglob("*")
+            if path.is_file()
+            and ".git" not in path.parts
+            and path != pdf
+            and path.suffix.lower() in SOURCE_SUFFIXES
+        ]
+        newest_dependency = max((path.stat().st_mtime for path in dependencies), default=main.stat().st_mtime)
+        if pdf.stat().st_mtime < newest_dependency:
+            errors.append("PDF 早于项目中的源码或资源，需要重新编译")
+        if log.is_file() and log.stat().st_mtime < newest_dependency:
+            errors.append("编译日志早于项目中的源码或资源，需要重新编译")
     else:
         warnings.append("未发现 PDF；交付前应实际编译并检查")
 
-    if manifest.get("authority") == "school-template" and not (project / "school-template").exists():
-        errors.append("记录为学校模板项目，但 school-template/ 不存在")
+    if manifest.get("school_template_source_label") and not (project / "school-template").exists():
+        errors.append("记录了学校模板来源，但 school-template/ 不存在")
+    if manifest.get("school_template_status") == "copied-for-manual-adaptation":
+        warnings.append("学校模板已保留，但 main.tex 仍是内置基线；提交前必须人工适配学校模板")
 
     return {
         "passed": not errors,

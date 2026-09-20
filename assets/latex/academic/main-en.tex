@@ -1,0 +1,23 @@
+\documentclass[12pt]{article}
+\usepackage{studentwrite}
+\geometry{letterpaper,margin=1in}
+\renewcommand{\missingfield}[1]{\textcolor{red!70!black}{[[To fill: #1]]}}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.75em}{}
+\setlength{\parindent}{0.5in}
+\pagestyle{plain}
+
+\begin{document}
+\begin{center}
+  {\Large\bfseries @@TITLE@@\par}
+  \vspace{1em}
+  @@AUTHOR@@\\
+  @@COLLEGE@@, @@UNIVERSITY@@\\
+  @@DATE@@
+\end{center}
+\vspace{1em}
+
+@@BODY@@
+
+\section*{References}
+\missingfield{Add only sources actually cited, using the required citation style.}
+\end{document}

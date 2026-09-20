@@ -1,0 +1,21 @@
+\documentclass[11pt]{article}
+\usepackage{studentwrite}
+\geometry{letterpaper,margin=0.75in}
+\renewcommand{\missingfield}[1]{\textcolor{red!70!black}{[[To fill: #1]]}}
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em}
+\pagestyle{empty}
+
+\begin{document}
+{\LARGE\bfseries @@AUTHOR@@}\hfill
+\begin{minipage}[t]{0.44\textwidth}
+\raggedleft
+\missingfield{Email and phone}\\
+\missingfield{City and professional link}
+\end{minipage}
+
+@@COLLEGE@@, @@UNIVERSITY@@
+
+@@BODY@@
+\end{document}

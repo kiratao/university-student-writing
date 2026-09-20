@@ -1,15 +1,21 @@
 \documentclass[12pt,letterpaper]{article}
 \usepackage{studentwrite}
+\renewcommand{\missingfield}[1]{\textcolor{red!70!black}{[[To fill: #1]]}}
 \geometry{letterpaper,margin=1in}
 \setstretch{2}
 \setlength{\parindent}{0.5in}
-\pagestyle{plain}
+\titleformat{\section}{\centering\bfseries}{}{0pt}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\setlength{\headheight}{15pt}
+\renewcommand{\headrulewidth}{0pt}
 
 \begin{document}
 \hypersetup{pageanchor=false}
 \begin{titlepage}
-  \thispagestyle{plain}
-  \vspace*{2in}
+  \thispagestyle{fancy}
+  \vspace*{1.2in}
   \begin{center}
     {\bfseries @@TITLE@@\par}
     \vspace{1em}

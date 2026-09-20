@@ -30,7 +30,7 @@
 \IfFontExistsTF{Latin Modern Mono}{\setmonofont{Latin Modern Mono}}{}
 
 \IfFontExistsTF{SimSun}{
-  \setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}
+  \setCJKmainfont[AutoFakeBold=2.5,AutoFakeSlant=0.2]{SimSun}
 }{
   \setCJKmainfont[BoldFont=FandolSong-Bold,ItalicFont=FandolKai-Regular]{FandolSong-Regular}
 }
@@ -40,7 +40,7 @@
   \setCJKsansfont[BoldFont=FandolHei-Bold]{FandolHei-Regular}
 }
 \IfFontExistsTF{FangSong}{
-  \setCJKfamilyfont{studentfangsong}[BoldFont=SimHei]{FangSong}
+  \setCJKfamilyfont{studentfangsong}[AutoFakeBold=2.5]{FangSong}
 }{
   \setCJKfamilyfont{studentfangsong}[AutoFakeBold=2.5]{FandolFang-Regular}
 }

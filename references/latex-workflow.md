@@ -4,14 +4,14 @@
 
 ```powershell
 python scripts/create_document.py --list
-python scripts/create_document.py --genre social-practice-report --output ./社会实践报告
+python scripts/create_document.py --genre social-practice-report-zh --output ./社会实践报告
 ```
 
 可选参数：
 
-- `--language zh|en`：覆盖注册表默认语言；
 - `--title`、`--author`、`--student-id`、`--university`、`--college`：写入已知元数据；
-- `--school-template <path>`：把学校模板原样复制到项目的 `school-template/`，记录其来源并提示人工适配；
+- `--last-name`：生成 MLA 文稿时填写右上角页眉中的作者姓氏；
+- `--school-template <path>`：把学校模板原样复制到项目的 `school-template/`，记录其来源并明确标记为“尚待人工适配”；该参数不会声称已自动套用学校模板；
 - `--force`：只用于确认可以覆盖一个已经存在但为空的输出目录；不能覆盖非空目录。
 
 ## 编译
