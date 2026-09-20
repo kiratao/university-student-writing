@@ -18,7 +18,7 @@
 
 **大学生多文体写作**是一个面向 ChatGPT 与 Codex 的 Skill。它会先判断文体与接收对象，再选择相应规范和 LaTeX 模板；信息不足时保留醒目的待填写字段，不替用户虚构经历、数据、引语、奖项或审批事实。
 
-> 当前状态：插件包已经可以本地测试并用于 OpenAI 插件门户提交，但尚未宣称已通过公开目录审核。
+> 当前状态：插件包已经可以本地测试并上传为 OpenAI 插件门户草稿。正式提交仍需发布者补充公开 URL、Logo、截图和经过验证的开发者身份；项目不宣称已经通过审核或上架。
 
 ## 它能做什么
 
@@ -79,13 +79,15 @@ $university-student-writing 以我提供的学校模板为最高优先级，生�
 Windows PowerShell：
 
 ```powershell
-Copy-Item .\skills\university-student-writing "$HOME\.agents\skills\university-student-writing" -Recurse
+New-Item -ItemType Directory "$HOME\.agents\skills" -Force | Out-Null
+Copy-Item .\skills\university-student-writing "$HOME\.agents\skills" -Recurse
 ```
 
 macOS 或 Linux：
 
 ```bash
-cp -R ./skills/university-student-writing "$HOME/.agents/skills/university-student-writing"
+mkdir -p "$HOME/.agents/skills"
+cp -R ./skills/university-student-writing "$HOME/.agents/skills/"
 ```
 
 Codex 通常会自动发现新 Skill；若没有出现，请重新启动 Codex。也可以在 Codex 中使用 `$skill-installer` 从代码仓库安装 Skill。
@@ -178,7 +180,7 @@ python scripts/package_plugin.py
 
 ## 数据与隐私
 
-随附脚本在本地读取和写入文档，不包含遥测、远程账号连接或自动上传逻辑。用户仍应避免把身份证号、住址、未公开调查数据等敏感信息放入不受信任的环境。详见[隐私说明](docs/PRIVACY.md)。
+随附脚本只在宿主提供的受控执行环境中读写文档，不包含遥测、远程账号连接或自动上传逻辑。用户仍应避免把身份证号、住址、未公开调查数据等敏感信息放入不受信任的环境。详见[隐私说明](docs/PRIVACY.md)。
 
 ## 使用边界
 
@@ -209,4 +211,4 @@ python scripts/package_plugin.py
 
 University Student Writing is a skills-only plugin for ChatGPT and Codex. It routes 70 Chinese and English university writing genres across six common student contexts, generates editable LaTeX projects, preserves institution-specific authority, exposes missing facts instead of inventing them, and validates observable project structure and compilation state.
 
-The public marketplace package is ready for submission but is not represented as approved or listed until OpenAI completes its review.
+The package is ready for local testing and draft upload. Public submission still requires verified publisher information and production listing assets, and the project is not represented as approved or listed.
