@@ -1,0 +1,28 @@
+\documentclass[UTF8,zihao=-4,fontset=none]{ctexart}
+\usepackage{studentwrite}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \centering
+  {\zihao{2}\bfseries @@TITLE@@\par}
+  \vspace{2cm}
+  \begin{tabular}{rl}
+    学校：& @@UNIVERSITY@@\\[0.6em]
+    学院：& @@COLLEGE@@\\[0.6em]
+    姓名：& @@AUTHOR@@\\[0.6em]
+    学号：& @@STUDENT_ID@@\\
+  \end{tabular}
+  \vfill
+  @@DATE@@
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\tableofcontents
+\newpage
+@@BODY@@
+
+\appendix
+\section{附录}
+\missingfield{按需要放置问卷、访谈提纲、原始记录、证明材料或补充图表；没有时删除本节}
+\end{document}

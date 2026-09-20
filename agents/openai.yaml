@@ -1,0 +1,6 @@
+interface:
+  display_name: "大学生多文体写作"
+  short_description: "生成、适配并校验大学生常用中英文 LaTeX 文档与标准格式"
+  default_prompt: "Use $university-student-writing to create a standards-based LaTeX document for a university student."
+policy:
+  allow_implicit_invocation: true

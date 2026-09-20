@@ -1,0 +1,29 @@
+\documentclass[UTF8,zihao=-4,fontset=none]{ctexart}
+\usepackage{studentwrite}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \centering
+  {\zihao{2}\bfseries @@TITLE@@\par}
+  \vspace{1.5cm}
+  {\zihao{3}\studentfangsong \missingfield{活动或项目名称}\par}
+  \vfill
+  \begin{tabular}{rl}
+    主办单位：& \missingfield{单位}\\[0.5em]
+    承办单位：& \missingfield{单位}\\[0.5em]
+    负责人：& @@AUTHOR@@\\[0.5em]
+    学院：& @@COLLEGE@@\\
+  \end{tabular}
+  \vspace{1cm}
+  @@DATE@@
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\tableofcontents
+\newpage
+@@BODY@@
+
+\section{附件清单}
+\missingfield{预算明细、场地审批、人员名单、流程表或其他必要附件}
+\end{document}

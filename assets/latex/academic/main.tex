@@ -1,0 +1,38 @@
+\documentclass[UTF8,zihao=-4,fontset=none]{ctexart}
+\usepackage{studentwrite}
+\geometry{a4paper,top=2.6cm,bottom=2.6cm,left=3cm,right=2.6cm}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \centering
+  {\zihao{2}\bfseries @@TITLE@@\par}
+  \vspace{2.5cm}
+  \begin{tabular}{rl}
+    学校：& @@UNIVERSITY@@\\[0.7em]
+    学院：& @@COLLEGE@@\\[0.7em]
+    作者：& @@AUTHOR@@\\[0.7em]
+    学号：& @@STUDENT_ID@@\\
+  \end{tabular}
+  \vfill
+  {@@DATE@@\par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\begin{abstract}
+\missingfield{用客观、简洁的语言概括问题、方法、主要结果和结论；短作业按教师要求处理}
+
+\noindent\textbf{关键词：}\missingfield{3--5个关键词}
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+@@BODY@@
+
+\section*{参考文献}
+\addcontentsline{toc}{section}{参考文献}
+\begin{enumerate}[label={[\arabic*]}]
+  \item \missingfield{核验后的参考文献；按学校或指定体例排版}
+\end{enumerate}
+\end{document}

@@ -1,0 +1,74 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{studentwrite}[2026/09/20 Shared styles for university student documents]
+
+\RequirePackage{iftex}
+\ifXeTeX\else
+  \PackageError{studentwrite}{XeLaTeX is required for the built-in templates}{Use xelatex or an institution-supplied engine configuration.}
+\fi
+
+\RequirePackage{fontspec}
+\RequirePackage{xeCJK}
+\RequirePackage{geometry}
+\RequirePackage{setspace}
+\RequirePackage{titlesec}
+\RequirePackage{enumitem}
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}
+\RequirePackage{longtable}
+\RequirePackage{tabularx}
+\RequirePackage{array}
+\RequirePackage{xcolor}
+\RequirePackage{hyperref}
+\RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
+
+\providecommand{\zihao}[1]{\normalsize}
+
+\defaultfontfeatures{Ligatures=TeX}
+\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{}
+\IfFontExistsTF{TeX Gyre Heros}{\setsansfont{TeX Gyre Heros}}{}
+\IfFontExistsTF{Latin Modern Mono}{\setmonofont{Latin Modern Mono}}{}
+
+\IfFontExistsTF{SimSun}{
+  \setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}
+}{
+  \setCJKmainfont[BoldFont=FandolSong-Bold,ItalicFont=FandolKai-Regular]{FandolSong-Regular}
+}
+\IfFontExistsTF{SimHei}{
+  \setCJKsansfont[AutoFakeBold=2.5]{SimHei}
+}{
+  \setCJKsansfont[BoldFont=FandolHei-Bold]{FandolHei-Regular}
+}
+\IfFontExistsTF{FangSong}{
+  \setCJKfamilyfont{studentfangsong}[BoldFont=SimHei]{FangSong}
+}{
+  \setCJKfamilyfont{studentfangsong}[AutoFakeBold=2.5]{FandolFang-Regular}
+}
+\IfFontExistsTF{KaiTi}{
+  \setCJKfamilyfont{studentkai}[AutoFakeBold=2.5]{KaiTi}
+}{
+  \setCJKfamilyfont{studentkai}[AutoFakeBold=2.5]{FandolKai-Regular}
+}
+
+\newcommand{\studentfangsong}{\CJKfamily{studentfangsong}}
+\newcommand{\studentkai}{\CJKfamily{studentkai}}
+\newcommand{\missingfield}[1]{\textcolor{red!70!black}{[[待填写：#1]]}}
+\newcommand{\studentmeta}[2]{\noindent\textbf{#1：}\,#2\par}
+\newcommand{\studentsignature}[2]{%
+  \begin{flushright}#1\\#2\end{flushright}}
+
+\geometry{a4paper,top=2.54cm,bottom=2.54cm,left=2.8cm,right=2.8cm}
+\setstretch{1.5}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setlist{nosep,leftmargin=2em}
+\titleformat{\section}{\centering\bfseries\zihao{3}}{\thesection}{1em}{}
+\titleformat{\subsection}{\bfseries\zihao{4}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\bfseries\zihao{-4}}{\thesubsubsection}{1em}{}
+\hypersetup{unicode=true,colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!55!black}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage\,/\,\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\AtBeginDocument{\sloppy}

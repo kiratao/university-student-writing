@@ -1,0 +1,31 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage{studentwrite}
+\geometry{letterpaper,margin=1in}
+\setstretch{2}
+\setlength{\parindent}{0.5in}
+\pagestyle{plain}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \thispagestyle{plain}
+  \vspace*{2in}
+  \begin{center}
+    {\bfseries @@TITLE@@\par}
+    \vspace{1em}
+    @@AUTHOR@@\\
+    @@COLLEGE@@, @@UNIVERSITY@@\\
+    \missingfield{Course number and name}\\
+    \missingfield{Instructor}\\
+    @@DATE@@
+  \end{center}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+
+\begin{center}\textbf{@@TITLE@@}\end{center}
+@@BODY@@
+
+\newpage
+\begin{center}\textbf{References}\end{center}
+\noindent\missingfield{APA 7 reference entries with hanging indents}
+\end{document}

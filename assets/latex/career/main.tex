@@ -1,0 +1,19 @@
+\documentclass[UTF8,zihao=5,fontset=none]{ctexart}
+\usepackage{studentwrite}
+\geometry{a4paper,top=1.6cm,bottom=1.6cm,left=1.8cm,right=1.8cm}
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
+
+\begin{document}
+{\LARGE\bfseries @@AUTHOR@@}\hfill
+\begin{minipage}[t]{0.55\textwidth}
+\raggedleft
+\missingfield{电话}\quad \missingfield{邮箱}\\
+@@COLLEGE@@, @@UNIVERSITY@@
+\end{minipage}
+
+\vspace{0.5em}
+@@BODY@@
+\end{document}
