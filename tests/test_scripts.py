@@ -137,11 +137,33 @@ class ScriptTests(unittest.TestCase):
             self.assertTrue(any("required_sections" in item for item in result["errors"]))
             self.assertTrue(any("越出项目目录" in item for item in result["errors"]))
 
+    def test_validator_rejects_external_main_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            temp_root = Path(temp)
+            output = temp_root / "project"
+            created = self.run_script(CREATE, "--genre", "course-paper-zh", "--output", str(output))
+            self.assertEqual(created.returncode, 0, created.stderr)
+            outside = temp_root / "outside.tex"
+            outside.write_text("\\begin{document}\\end{document}", encoding="utf-8")
+            manifest_path = output / "document.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["main"] = "../outside.tex"
+            manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
+            checked = self.run_script(VALIDATE, str(output), "--json")
+            self.assertNotEqual(checked.returncode, 0)
+            result = json.loads(checked.stdout)
+            self.assertTrue(any("主文件路径越出项目目录" in item for item in result["errors"]))
+
     @unittest.skipUnless(shutil.which("latexmk"), "latexmk is not installed")
     def test_representative_chinese_and_english_projects_compile(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             temp_root = Path(temp)
-            for genre_id in ("course-paper-zh", "formal-email-en", "mla-research-paper-en"):
+            for genre_id in (
+                "course-paper-zh",
+                "formal-email-en",
+                "apa-student-paper-en",
+                "mla-research-paper-en",
+            ):
                 output = temp_root / genre_id
                 created = self.run_script(
                     CREATE,
@@ -151,6 +173,9 @@ class ScriptTests(unittest.TestCase):
                     "--last-name", "Student",
                 )
                 self.assertEqual(created.returncode, 0, created.stderr)
+                if genre_id == "apa-student-paper-en":
+                    source = (output / "main.tex").read_text(encoding="utf-8")
+                    self.assertIn("\\setcounter{page}{2}", source)
                 compiled = subprocess.run(
                     ["latexmk", "-xelatex", "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
                     cwd=output,

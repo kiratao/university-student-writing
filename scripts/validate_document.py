@@ -22,7 +22,12 @@ def load_project(project: Path) -> tuple[dict, Path, str]:
     if not manifest_path.is_file():
         raise ValueError("缺少 document.json")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    main = project / manifest.get("main", "main.tex")
+    main_value = manifest.get("main", "main.tex")
+    if not isinstance(main_value, str) or not main_value.strip():
+        raise ValueError("document.json 的 main 必须是非空字符串")
+    main = (project / main_value).resolve()
+    if not main.is_relative_to(project):
+        raise ValueError("document.json 的主文件路径越出项目目录")
     if not main.is_file():
         raise ValueError(f"缺少主文件：{main.name}")
     return manifest, main, main.read_text(encoding="utf-8")
