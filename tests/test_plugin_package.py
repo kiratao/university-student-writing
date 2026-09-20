@@ -30,6 +30,12 @@ class PluginPackageTests(unittest.TestCase):
         self.assertEqual(portable["$schema"], "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json")
         self.assertEqual(portable["name"], compatibility["name"])
         self.assertEqual(portable["version"], compatibility["version"])
+        self.assertEqual(portable["description"], compatibility["description"])
+        self.assertEqual(portable["keywords"], compatibility["keywords"])
+        interface = portable["extensions"]["com.openai"]["interface"]
+        self.assertEqual(interface, compatibility["interface"])
+        self.assertEqual(interface["category"], "Education & Research")
+        self.assertLessEqual(len(interface["shortDescription"]), 30)
         self.assertIn(f"name: {portable['name']}", skill_frontmatter)
 
     def test_archive_is_deterministic_and_clean(self) -> None:
@@ -49,6 +55,22 @@ class PluginPackageTests(unittest.TestCase):
             self.assertIn("skills/university-student-writing/SKILL.md", names)
             self.assertFalse(any("/.git/" in name or "/tests/" in name for name in names))
             self.assertFalse(any(name.endswith((".log", ".aux", ".pyc")) for name in names))
+
+    def test_output_safety_and_manifest_driven_default_name(self) -> None:
+        module = load_package_module()
+        manifest = module.load_manifest()
+        self.assertEqual(
+            module.default_output(manifest).name,
+            f"{manifest['name']}-{manifest['version']}.zip",
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            sentinel = Path(temp) / "sentinel.txt"
+            sentinel.write_text("keep me", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, r"\.zip extension"):
+                module.build_archive(sentinel, True)
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "keep me")
+            with self.assertRaisesRegex(ValueError, "packaged source file"):
+                module.build_archive(ROOT / "plugin.json", True)
 
 
 if __name__ == "__main__":

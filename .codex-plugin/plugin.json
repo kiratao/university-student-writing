@@ -1,7 +1,7 @@
 {
   "name": "university-student-writing",
   "version": "1.0.0",
-  "description": "Create, adapt, and validate standards-aware LaTeX documents for university students.",
+  "description": "Create, adapt, and validate standards-aware LaTeX documents for university study, campus life, social practice, student organizations, news, and career use.",
   "author": {
     "name": "tyz"
   },
@@ -10,15 +10,17 @@
     "university",
     "student-writing",
     "latex",
+    "academic-writing",
+    "chinese-writing",
     "education"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "大学生多文体写作",
-    "shortDescription": "生成并校验大学生常用中英文 LaTeX 文档",
-    "longDescription": "覆盖学习、社会实践、学生工作、校园新闻、申请与求职场景，根据真实规范生成可编辑 LaTeX 项目并执行结构与编译校验。",
+    "shortDescription": "为大学生生成并校验规范的 LaTeX 文档",
+    "longDescription": "覆盖课程论文、社会实践、学生工作、校园新闻、申请与求职等 6 类场景、70 种文体。根据接收方与学校要求选择结构，生成可编辑 LaTeX 项目，并检查缺失事实、引用、资源和编译状态。",
     "developerName": "tyz",
-    "category": "Education",
+    "category": "Education & Research",
     "capabilities": [
       "Writing",
       "LaTeX generation",

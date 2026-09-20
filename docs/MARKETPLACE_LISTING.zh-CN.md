@@ -4,14 +4,14 @@
 
 - 插件标识：`university-student-writing`
 - 展示名称：大学生多文体写作
-- 建议分类：Education
+- 建议分类：Education & Research
 - 提交类型：仅技能
 - 初始版本：`1.0.0`
 - 许可证：MIT
 
 ## 短描述
 
-为大学学习与校园场景生成规范、可编辑、可校验的 LaTeX 文档。
+为大学生生成并校验规范的 LaTeX 文档。
 
 ## 详细描述
 
