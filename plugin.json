@@ -19,7 +19,7 @@
     "com.openai": {
       "interface": {
         "displayName": "大学生多文体写作",
-        "shortDescription": "为大学生生成并校验规范的 LaTeX 文档",
+        "shortDescription": "覆盖大学学习、实践与求职场景，生成规范的 LaTeX 文档",
         "longDescription": "覆盖课程论文、社会实践、学生工作、校园新闻、申请与求职等 6 类场景、70 种文体。根据接收方与学校要求选择结构，生成可编辑 LaTeX 项目，并检查缺失事实、引用、资源和编译状态。",
         "developerName": "tyz",
         "category": "Education & Research",
@@ -33,7 +33,9 @@
           "把这份活动策划书整理成规范、可编译的 LaTeX 文档。",
           "检查这篇课程论文的结构、引用和 LaTeX 排版。"
         ],
-        "brandColor": "#5B4B8A"
+        "brandColor": "#5B4B8A",
+        "composerIcon": "./skills/university-student-writing/assets/branding/composer-icon.png",
+        "logo": "./skills/university-student-writing/assets/branding/logo.png"
       }
     }
   }
