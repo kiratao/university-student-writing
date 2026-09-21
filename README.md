@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="skills/university-student-writing/assets/branding/logo.png" alt="大学生多文体写作 Logo" width="160">
+
 # 大学生多文体写作
 
 ### University Student Writing for ChatGPT & Codex
@@ -18,7 +20,7 @@
 
 **大学生多文体写作**是一个面向 ChatGPT 与 Codex 的 Skill。它会先判断文体与接收对象，再选择相应规范和 LaTeX 模板；信息不足时保留醒目的待填写字段，不替用户虚构经历、数据、引语、奖项或审批事实。
 
-> 当前状态：插件包已经可以本地测试并上传为 OpenAI 插件门户草稿。正式提交仍需发布者补充公开 URL、Logo、截图和经过验证的开发者身份；项目不宣称已经通过审核或上架。
+> 当前状态：插件包已经可以本地测试并上传为 OpenAI 插件门户草稿，Logo 与 composerIcon 已就绪。正式提交仍需发布者补充公开 URL 和经过验证的开发者身份；纯 Skill 插件不要求产品截图，项目不宣称已经通过审核或上架。
 
 ## 它能做什么
 
